@@ -1,0 +1,32 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract ValueManager {
+    uint256 public accumulatedValue;
+
+    function addValue(uint256 _valueToAdd) external {
+        require(_valueToAdd > 0, "Value to add must be greater than zero");
+        
+        if (_valueToAdd > 100) {
+            revert("Value to add must not be greater than 100");
+        }
+
+        uint256 updatedValue = accumulatedValue + _valueToAdd;
+        assert(updatedValue >= accumulatedValue);
+
+        accumulatedValue = updatedValue;
+    }
+    
+    function reduceValue(uint256 _valueToSubtract) external { 
+        require(_valueToSubtract <= accumulatedValue, "Value to subtract cannot exceed accumulated value.");
+
+        uint256 updatedValue = accumulatedValue - _valueToSubtract;
+        accumulatedValue = updatedValue;
+    }
+
+    function checkAssertion() external pure returns (bool) {
+        // This assert will always pass, demonstrating its proper use.
+        assert(1 == 1);
+        return true;
+    }
+}
