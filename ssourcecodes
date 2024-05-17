@@ -1,32 +1,60 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract ValueManager {
+contract AdvancedValueManager {
     uint256 public accumulatedValue;
 
+    event ValueAdded(uint256 value);
+    event ValueSubtracted(uint256 value);
+    event ValueMultiplied(uint256 value);
+    event ValueDivided(uint256 value);
+
+    // Function to add value
     function addValue(uint256 _valueToAdd) external {
         require(_valueToAdd > 0, "Value to add must be greater than zero");
-        
-        if (_valueToAdd > 100) {
-            revert("Value to add must not be greater than 100");
-        }
+        require(_valueToAdd <= 5000, "Value to add must not be greater than 5000");
 
-        uint256 updatedValue = accumulatedValue + _valueToAdd;
-        assert(updatedValue >= accumulatedValue);
-
-        accumulatedValue = updatedValue;
+        accumulatedValue += _valueToAdd;
+        emit ValueAdded(_valueToAdd);
     }
-    
-    function reduceValue(uint256 _valueToSubtract) external { 
+
+    // Function to subtract value
+    function subtractValue(uint256 _valueToSubtract) external {
         require(_valueToSubtract <= accumulatedValue, "Value to subtract cannot exceed accumulated value.");
 
-        uint256 updatedValue = accumulatedValue - _valueToSubtract;
-        accumulatedValue = updatedValue;
+        accumulatedValue -= _valueToSubtract;
+        emit ValueSubtracted(_valueToSubtract);
     }
 
+    // Function to multiply value
+    function multiplyValue(uint256 _valueToMultiply) external {
+        require(_valueToMultiply > 0, "Value to multiply must be greater than zero");
+
+        accumulatedValue *= _valueToMultiply;
+        emit ValueMultiplied(_valueToMultiply);
+    }
+
+    // Function to divide value
+    function divideValue(uint256 _valueToDivide) external {
+        require(_valueToDivide > 0, "Value to divide must be greater than zero");
+
+        accumulatedValue /= _valueToDivide;
+        emit ValueDivided(_valueToDivide);
+    }
+
+    // Function to reset accumulated value
+    function resetValue() external {
+        accumulatedValue = 0;
+    }
+
+    // Function to check assertion
     function checkAssertion() external pure returns (bool) {
-        // This assert will always pass, demonstrating its proper use.
         assert(1 == 1);
         return true;
+    }
+
+    // Function to get current accumulated value
+    function getAccumulatedValue() external view returns (uint256) {
+        return accumulatedValue;
     }
 }
